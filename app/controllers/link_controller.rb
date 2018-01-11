@@ -5,7 +5,7 @@ class LinkController < ApplicationController
     url = get_url
     # Finally we have a URL! Let's make a link
     # (or return one that already exists)
-    link = Link.find_by(url: url) || Link.create!(url: url)
+    link = Link.find_or_create_by!(url: url)
     render json: { hash: link.code }
   rescue => err
     render json: { error: err }, status: 422
@@ -44,6 +44,16 @@ class LinkController < ApplicationController
       flash[:error] = 'Could not find that link'
       redirect_to root_path
     end
+  end
+
+  def create
+    link = Link.find_or_create_by(url: params[:link][:url])
+    if link.valid?
+      flash[:message] = "Link created! #{visit_url(link.code)}"
+    else
+      flash[:error] = "Error: #{link.errors.full_messages.to_sentence}"
+    end
+    redirect_to root_path
   end
 
   private

@@ -1,0 +1,15 @@
+<h1>URL Shortener</h1>
+
+<%= form_for Link.new, url: create_path do |f| %>
+  <%= f.text_field(:url) %>
+  <br/>
+  <%= f.submit('Shorten!') %>
+<% end %>
+
+<% if flash[:message].present? %>
+  <div class="flash-message"><%= flash[:message] %></div>
+<% end %>
+
+<% if flash[:error].present? %>
+  <div class="flash-message"><%= flash[:error] %></div>
+<% end %>
