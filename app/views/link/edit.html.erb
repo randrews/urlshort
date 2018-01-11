@@ -1,0 +1,9 @@
+<h1>Edit link <%= @link.code %></h1>
+
+<%= form_for @link, url: update_path do |f| %>
+  <%= f.text_field(:url) %>
+  <br/>
+  <%= f.submit('Save!') %>
+  <br/>
+  <%= link_to('Delete', delete_url(@link.code), method: :delete, data: { confirm: 'Are you sure?' }) %>
+<% end %>

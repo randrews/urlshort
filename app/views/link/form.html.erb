@@ -5,11 +5,3 @@
   <br/>
   <%= f.submit('Shorten!') %>
 <% end %>
-
-<% if flash[:message].present? %>
-  <div class="flash-message"><%= flash[:message] %></div>
-<% end %>
-
-<% if flash[:error].present? %>
-  <div class="flash-message"><%= flash[:error] %></div>
-<% end %>

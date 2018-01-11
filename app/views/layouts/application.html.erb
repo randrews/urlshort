@@ -10,5 +10,13 @@
 
   <body>
     <%= yield %>
+
+    <% if flash[:message].present? %>
+      <div class="flash-message"><%= flash[:message] %></div>
+    <% end %>
+
+    <% if flash[:error].present? %>
+      <div class="flash-message"><%= flash[:error] %></div>
+    <% end %>
   </body>
 </html>
