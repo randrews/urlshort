@@ -1,28 +1,32 @@
 class LinkController < ApplicationController
+  before_action :find_link, only: [:api_delete, :api_update]
+
   def api_create
-    # This action should run in two modes:
-    # - API sent a JSON payload as the body
-    # - API sent a form payload as the body
-    # I wasn't sure if the intent was for the payload to be a JSON string or a
-    # form, so I just made it handle both.
-
-    url = params[:url]
-
-    if url.blank?
-      begin
-        json = request.body.read # Grab and parse the body
-        hash = JSON.parse(json)
-        url = hash.try(:[], 'url') # Hope it's a hash with a 'url' field
-        render json: { error: 'No URL given' } unless url
-      rescue JSON::ParserError
-        render json: { error: 'Unable to parse JSON' }
-      end
-    end
-
+    url = get_url
     # Finally we have a URL! Let's make a link
     # (or return one that already exists)
     link = Link.find_by(url: url) || Link.create!(url: url)
     render json: { hash: link.code }
+  rescue => err
+    render json: { error: err }, status: 422
+  end
+
+  def api_delete
+    @link.destroy
+    render json: { message: 'Link deleted' }
+  end
+
+  # So for the record, I'd never want to actually implement
+  # this, because: make a link, submit it to Reddit, wait
+  # for it to hit frontpage, then change the target to this:
+  # http://bit.ly/IqT6zt
+  # But, here it is:
+  def api_update
+    url = get_url
+    @link.update_attribute(:url, url)
+    render json: { message: 'Link updated' }
+  rescue => err
+    render json: { error: err }, status: 422
   end
 
   def visit
@@ -40,5 +44,37 @@ class LinkController < ApplicationController
       flash[:error] = 'Could not find that link'
       redirect_to root_path
     end
+  end
+
+  private
+
+  def find_link
+    @link = Link.find_by(code: params[:code])
+    render json: { error: 'Link not found' }, status: 404 unless @link
+    @link
+  end
+
+  def get_url
+    # This lets actions run in two modes:
+    # - API sent a JSON payload as the body
+    # - API sent a form payload as the body
+    # I wasn't sure if the intent was for the payload
+    # to be a JSON string or a form, so I just made
+    # it handle both.
+
+    url = params[:url]
+
+    if url.blank?
+      begin
+        json = request.body.read # Grab and parse the body
+        hash = JSON.parse(json)
+        url = hash.try(:[], 'url') # Hope it's a hash with that field
+        raise 'No URL given' unless url
+      rescue JSON::ParserError
+        raise 'Unable to parse JSON'
+      end
+    end
+
+    url
   end
 end
