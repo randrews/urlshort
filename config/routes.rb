@@ -1,3 +1,6 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  root 'link#form'
+
+  post '/v1/links' => 'link#api_create', as: :api_create
+  get '/v1/:code' => 'link#visit', as: :visit
 end
