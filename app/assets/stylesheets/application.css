@@ -13,3 +13,48 @@
  *= require_tree .
  *= require_self
  */
+
+h1 {
+    text-align: center;
+}
+
+form input[type=text] {
+    display: block;
+    width: 50%;
+    margin: auto;
+    font-size: 32px;
+}
+
+form input[type=submit] {
+    display: block;
+    width: 200px;
+    margin: auto;
+    font-size: 32px;
+}
+
+div.flash-error {
+    width: 50%;
+    margin: 20px auto;
+    background: #ffa0a0;
+    font-size: 24px;
+    padding: 5px;
+    text-align: center;
+    color: #602020;
+}
+
+div.flash-message {
+    width: 50%;
+    margin: 20px auto;
+    background: #a0a0ff;
+    font-size: 24px;
+    padding: 5px;
+    text-align: center;
+    color: #202060;
+}
+
+a[data-method=delete] {
+    display: block;
+    text-align: center;
+    font-size: 24px;
+    color: red;
+}
